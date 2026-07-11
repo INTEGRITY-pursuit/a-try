@@ -32,11 +32,11 @@ export default function ResultCard() {
       <div className="result-stack">
         <div className="result-item">
           <span>原文</span>
-          <p>今天的风很轻，适合把脑海里的想法慢慢写下来。</p>
+          <p>boy next door~。</p>
         </div>
         <div className="result-item">
           <span>拼音</span>
-          <p>jīn tiān de fēng hěn qīng …</p>
+          <p>a~yeah~ …</p>
         </div>
         <div className="result-grid">
           <div className="result-badge">

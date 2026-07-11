@@ -7,7 +7,7 @@ import { useState } from "react";
 //   · text 一变，下面那行"已输入 N 字"当场跟着跳——
 //     你连一句"找到那个元素再去改它"都不用写，React 自己刷。
 export default function InputCard() {
-  const [text, setText] = useState("今天的风很轻，适合把脑海里的想法慢慢写下来。");
+  const [text, setText] = useState("what happened。");
 
   return (
     <article className="panel panel-half lab-panel card">
@@ -20,7 +20,7 @@ export default function InputCard() {
         <textarea
           id="text-input"
           rows="8"
-          placeholder="例如：生活没有标准答案，但每一天都值得认真感受。"
+          placeholder="例如：boy next door。"
           value={text}
           onChange={(e) => setText(e.target.value)}
         />

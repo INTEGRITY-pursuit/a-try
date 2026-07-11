@@ -4,12 +4,12 @@
 export default function Nav({ current, onNavigate }) {
   const items = [
     { key: "home",    label: "个人主页" },
-    { key: "textlab", label: "文字实验室" },
+    { key: "textlab", label: "地牢" },
   ];
 
   return (
     <div className="hero-topline">
-      <p className="brand-eyebrow">zero to tech</p>
+      <p className="brand-eyebrow">a-try</p>
       <nav className="inline-links hero-nav">
         {items.map((it) => (
           <a

@@ -1,70 +1,188 @@
+/* ══════════════════════════════════════════
+   HERO STAGE — 全宽、视差、大气效果
+   ══════════════════════════════════════════ */
+
 .hero-stage {
-  /* 突破 page-shell 的宽度限制，铺满视口 */
   position: relative;
   width: 100vw;
   left: 50%;
   transform: translateX(-50%);
   box-sizing: border-box;
-  /* 内容与 page-shell 对齐 */
-  padding-left: max(24px, calc((100vw - var(--maxw)) / 2));
+  padding-left:  max(24px, calc((100vw - var(--maxw)) / 2));
   padding-right: max(24px, calc((100vw - var(--maxw)) / 2));
   min-height: 100vh;
   display: grid;
   grid-template-rows: auto 1fr auto;
   overflow: hidden;
+  /* 视差 CSS 变量，由 JS 设置 */
+  --hero-mx: 0;
+  --hero-my: 0;
 }
 
-/* 背景图层：图片 + 深色叠加 + 细纹理 */
-.hero-stage::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      105deg,
-      rgba(14, 18, 19, 0.92) 0%,
-      rgba(14, 18, 19, 0.75) 45%,
-      rgba(14, 18, 19, 0.45) 70%,
-      rgba(14, 18, 19, 0.65) 100%
-    ),
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 28px,
-      rgba(200, 168, 90, 0.03) 28px,
-      rgba(200, 168, 90, 0.03) 29px
-    ),
-    url('/images/hero-bg.png') center 30% / cover no-repeat,
-    var(--page-bg);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* 底部渐变遮罩 */
+/* ── 底部渐变遮罩（最高层，压住幽灵文字底部） ── */
 .hero-stage::after {
   content: "";
   position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
-  height: 240px;
+  height: 260px;
   background: linear-gradient(to bottom, transparent, var(--page-bg));
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ── 细菱形纹理（常驻，不随视差移动） ── */
+.hero-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 28px,
+    rgba(200, 168, 90, 0.025) 28px,
+    rgba(200, 168, 90, 0.025) 29px
+  );
   pointer-events: none;
   z-index: 2;
 }
 
-/* ── 幽灵文字层（MERCY / LIGHTHOUSE 镂空大字压底） ── */
+/* ══ Layer 0: 背景图片（视差深层，移动最大） ══ */
+.hero-bg-layer {
+  position: absolute;
+  /* 比容器大，给视差移动留出余量 */
+  inset: -80px;
+  background:
+    linear-gradient(
+      105deg,
+      rgba(14, 18, 19, 0.90) 0%,
+      rgba(14, 18, 19, 0.72) 45%,
+      rgba(14, 18, 19, 0.42) 68%,
+      rgba(14, 18, 19, 0.62) 100%
+    ),
+    url('/images/hero-bg.png') center 30% / cover no-repeat,
+    var(--page-bg);
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+  transform:
+    translate(
+      calc(var(--hero-mx) * -28px),
+      calc(var(--hero-my) * -16px)
+    );
+  transition: transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ══ Layer 1: 雾气动画层 ══ */
+.hero-fog {
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+  z-index: 1;
+  border-radius: 50%;
+}
+
+.hero-fog--1 {
+  background: radial-gradient(
+    ellipse at 65% 38%,
+    rgba(200, 168, 90, 0.09) 0%,
+    transparent 55%
+  );
+  animation: fogDrift1 22s ease-in-out infinite;
+}
+
+.hero-fog--2 {
+  background: radial-gradient(
+    ellipse at 32% 62%,
+    rgba(84, 150, 168, 0.06) 0%,
+    transparent 50%
+  );
+  animation: fogDrift2 30s ease-in-out infinite;
+  animation-delay: -12s;
+}
+
+@keyframes fogDrift1 {
+  0%,  100% { transform: translate(0,    0)    scale(1);    opacity: 0.8; }
+  20%        { transform: translate(50px, -35px) scale(1.05); opacity: 1;   }
+  45%        { transform: translate(-30px, 22px) scale(0.95); opacity: 0.6; }
+  70%        { transform: translate(18px,  45px) scale(1.03); opacity: 0.9; }
+}
+
+@keyframes fogDrift2 {
+  0%,  100% { transform: translate(0,     0)    scale(1);   }
+  30%        { transform: translate(-55px,  40px) scale(1.04); }
+  65%        { transform: translate(40px,  -28px) scale(0.96); }
+}
+
+/* ══ Layer 1: 灯塔光束 ══ */
+.hero-beam {
+  position: absolute;
+  top: -10%;
+  left: 28%;
+  width: 200px;
+  height: 130%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(200, 168, 90, 0.035) 15%,
+    rgba(200, 168, 90, 0.07) 50%,
+    rgba(200, 168, 90, 0.035) 85%,
+    transparent 100%
+  );
+  clip-path: polygon(42% 0, 58% 0, 100% 100%, 0% 100%);
+  transform-origin: top center;
+  animation: beamSweep 18s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes beamSweep {
+  0%,  100% { opacity: 1;   transform: rotate(-12deg) scaleX(0.8); }
+  20%        { opacity: 0.4; transform: rotate(-5deg)  scaleX(1.1); }
+  50%        { opacity: 0.9; transform: rotate(7deg)   scaleX(0.9); }
+  80%        { opacity: 0.3; transform: rotate(2deg)   scaleX(1.2); }
+}
+
+/* ══ Layer 1: 颗粒噪点 ══ */
+.hero-grain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.035;
+  /* SVG 噪点作为 data URI */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+  animation: grainShift 0.15s steps(1) infinite;
+}
+
+@keyframes grainShift {
+  0%   { background-position: 0 0; }
+  25%  { background-position: -64px 32px; }
+  50%  { background-position: 32px -64px; }
+  75%  { background-position: -32px -32px; }
+}
+
+/* ══ Layer 2: 幽灵文字（中等视差） ══ */
 .hero-ghost-layer {
   position: absolute;
   right: -24px;
   bottom: 120px;
-  z-index: 1;
+  z-index: 3;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   pointer-events: none;
   user-select: none;
   line-height: 0.88;
+  will-change: transform;
+  transform:
+    translate(
+      calc(var(--hero-mx) * 14px),
+      calc(var(--hero-my) * 9px)
+    );
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero-ghost-line {
@@ -72,7 +190,7 @@
   font-size: clamp(72px, 12vw, 160px);
   font-weight: 700;
   color: transparent;
-  -webkit-text-stroke: 1px rgba(200, 168, 90, 0.11);
+  -webkit-text-stroke: 1px rgba(200, 168, 90, 0.12);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   display: block;
@@ -83,7 +201,7 @@
   font-size: clamp(60px, 10vw, 130px);
 }
 
-/* ── 扫描线纹理 ── */
+/* ══ Layer 3: 扫描线 ══ */
 .hero-scanlines {
   position: absolute;
   inset: 0;
@@ -91,52 +209,14 @@
     to bottom,
     transparent 0px,
     transparent 2px,
-    rgba(0, 0, 0, 0.07) 2px,
-    rgba(0, 0, 0, 0.07) 3px
+    rgba(0, 0, 0, 0.06) 2px,
+    rgba(0, 0, 0, 0.06) 3px
   );
   pointer-events: none;
-  z-index: 1;
+  z-index: 3;
 }
 
-/* ── HUD 瞄准角框 ── */
-.hud-corner {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  pointer-events: none;
-  z-index: 5;
-  transition: opacity 0.4s;
-}
-
-.hud-corner--tl {
-  top: 20px;
-  left: 0;
-  border-top: 1px solid var(--brand);
-  border-left: 1px solid var(--brand);
-}
-
-.hud-corner--tr {
-  top: 20px;
-  right: 0;
-  border-top: 1px solid var(--brand);
-  border-right: 1px solid var(--brand);
-}
-
-.hud-corner--bl {
-  bottom: 52px;
-  left: 0;
-  border-bottom: 1px solid var(--brand);
-  border-left: 1px solid var(--brand);
-}
-
-.hud-corner--br {
-  bottom: 52px;
-  right: 0;
-  border-bottom: 1px solid var(--brand);
-  border-right: 1px solid var(--brand);
-}
-
-/* ── 装饰性脚手架文字 ── */
+/* ══ Layer 3: 脚手架装饰文字 ══ */
 .hero-scaffold {
   position: absolute;
   bottom: 52px;
@@ -151,10 +231,24 @@
   text-transform: uppercase;
 }
 
-/* ── 导航栏层级 ── */
+/* ══ Layer 4: HUD 角框 ══ */
+.hud-corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.hud-corner--tl { top: 20px;  left: 0;  border-top: 1px solid var(--brand); border-left:  1px solid var(--brand); }
+.hud-corner--tr { top: 20px;  right: 0; border-top: 1px solid var(--brand); border-right: 1px solid var(--brand); }
+.hud-corner--bl { bottom: 52px; left: 0;  border-bottom: 1px solid var(--brand); border-left:  1px solid var(--brand); }
+.hud-corner--br { bottom: 52px; right: 0; border-bottom: 1px solid var(--brand); border-right: 1px solid var(--brand); }
+
+/* ══ Layer 5: 导航、标题、CTA ══ */
 .hero-topline {
   position: relative;
-  z-index: 4;
+  z-index: 7;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -164,17 +258,24 @@
 
 .hero-body {
   position: relative;
-  z-index: 4;
+  z-index: 7;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 60px 0 40px;
   max-width: 640px;
+  will-change: transform;
+  transform:
+    translate(
+      calc(var(--hero-mx) * 5px),
+      calc(var(--hero-my) * 3px)
+    );
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero-anchor-nav {
   position: relative;
-  z-index: 4;
+  z-index: 7;
   display: flex;
   gap: 0;
   padding: 28px 0 48px;
@@ -199,10 +300,7 @@
   gap: 6px;
 }
 
-.hero-anchor-item:last-child {
-  border-right: none;
-}
-
+.hero-anchor-item:last-child { border-right: none; }
 .hero-anchor-item:hover {
   color: var(--brand);
   background: var(--brand-dim);
@@ -254,7 +352,6 @@
   position: relative;
 }
 
-/* 标题左侧竖向强调条 */
 .hero-display::before {
   content: "";
   position: absolute;
@@ -292,11 +389,9 @@
   letter-spacing: 0.06em;
 }
 
-.hero-meta-item.status-ok {
-  color: var(--brand);
-}
+.hero-meta-item.status-ok { color: var(--brand); }
 
-/* ── CTA 按钮，加对角切角 ── */
+/* ── CTA 按钮 ── */
 .cta-button {
   display: inline-flex;
   align-items: center;
@@ -330,7 +425,6 @@
 
 /* ── 子页面小 Hero（text-lab）── */
 .hero-stage.hero-sub {
-  /* 取消全宽设定，回归普通流式布局 */
   width: auto;
   left: auto;
   transform: none;
@@ -339,6 +433,8 @@
   min-height: auto;
   padding-top: 48px;
   padding-bottom: 36px;
+  --hero-mx: 0;
+  --hero-my: 0;
 }
 
 .hero-stage.hero-sub::before,
@@ -352,4 +448,18 @@
   font-size: 12px;
   letter-spacing: 0.1em;
   margin-top: 10px;
+}
+
+/* ── 减少动态效果（无障碍）── */
+@media (prefers-reduced-motion: reduce) {
+  .hero-fog,
+  .hero-beam,
+  .hero-grain {
+    animation: none;
+  }
+  .hero-bg-layer,
+  .hero-ghost-layer,
+  .hero-body {
+    transition: none;
+  }
 }

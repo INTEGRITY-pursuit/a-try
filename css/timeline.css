@@ -1,26 +1,54 @@
+/* ══ 编年史区 ══ */
 .timeline-section {
-  padding: 96px 0;
   position: relative;
+  padding: 96px 0;
+  overflow: hidden;
+}
+
+/* 背景图层：特雷西斯王座 */
+.timeline-section-bg {
+  position: absolute;
+  inset: -60px;
+  background:
+    /* 从左到右：内容区深色 → 右侧图片略可见 */
+    linear-gradient(
+      105deg,
+      rgba(14, 18, 19, 0.97) 0%,
+      rgba(14, 18, 19, 0.90) 45%,
+      rgba(14, 18, 19, 0.70) 70%,
+      rgba(14, 18, 19, 0.85) 100%
+    ),
+    url('/images/theresis-throne.png') 75% center / cover no-repeat;
+  animation: throneVignette 12s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes throneVignette {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.88; }
 }
 
 .timeline-section-header {
+  position: relative;
+  z-index: 1;
   margin-bottom: 64px;
 }
 
 /* 时间线容器 */
 .timeline-track {
   position: relative;
+  z-index: 1;
   display: grid;
   gap: 0;
 }
 
-/* 竖轴线：使用渐变让它更有档案感 */
+/* 竖轴线 */
 .timeline-track::before {
   content: "";
   position: absolute;
   left: 140px;
-  top: 0;
-  bottom: 0;
+  top: 0; bottom: 0;
   width: 1px;
   background: linear-gradient(
     to bottom,
@@ -38,17 +66,20 @@
   grid-template-columns: 140px 1fr;
   gap: 0;
   padding: 0 0 0 0;
-  opacity: 0.3;
-  transition: opacity 0.5s;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s, transform 0.6s;
 }
 
 .timeline-node.active {
   opacity: 1;
+  transform: translateY(0);
 }
 
-/* 节点内容区块（带背景面板） */
+/* 激活后内容面板 */
 .timeline-node.active .timeline-content-col {
-  background: var(--surface);
+  background: rgba(23, 27, 28, 0.88);
+  backdrop-filter: blur(4px);
   border: 1px solid var(--border-dim);
   border-left: 2px solid var(--node-color, var(--brand));
 }
@@ -73,7 +104,7 @@
   margin-top: 4px;
 }
 
-/* 节点菱形（比圆点更有 AK 感） */
+/* 节点菱形 */
 .timeline-dot {
   position: absolute;
   left: 133px;
@@ -83,21 +114,43 @@
   background: var(--surface);
   border: 1px solid var(--border-dim);
   transform: rotate(45deg);
-  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
-  z-index: 1;
+  transition: border-color 0.4s, background 0.4s, box-shadow 0.4s;
+  z-index: 2;
 }
 
+/* 节点激活：菱形亮起 + 扩散光晕 */
 .timeline-node.active .timeline-dot {
   border-color: var(--node-color, var(--brand));
   background: var(--node-color, var(--brand));
-  box-shadow: 0 0 16px var(--node-color, rgba(200,168,90,0.4));
+  box-shadow:
+    0 0 0 4px rgba(200,168,90,0.12),
+    0 0 16px var(--node-color, rgba(200,168,90,0.4));
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%,100% { box-shadow: 0 0 0 4px rgba(200,168,90,0.12), 0 0 16px rgba(200,168,90,0.4); }
+  50%      { box-shadow: 0 0 0 8px rgba(200,168,90,0.06), 0 0 28px rgba(200,168,90,0.25); }
+}
+
+/* 节点激活后：左侧竖轴填充颜色 */
+.timeline-node.active::before {
+  content: "";
+  position: absolute;
+  left: 140px;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--node-color, var(--brand)), transparent);
+  opacity: 0.4;
+  z-index: 0;
 }
 
 /* 右侧内容列 */
 .timeline-content-col {
   padding: 24px 28px 32px;
   margin-bottom: 16px;
-  transition: background 0.4s, border-color 0.4s;
+  transition: background 0.5s, border-color 0.5s, backdrop-filter 0.5s;
   clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
 }
 
@@ -132,6 +185,29 @@
   color: var(--node-color, var(--brand));
 }
 
+/* 数据闪烁文字（激活时出现） */
+.timeline-data-burst {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--node-color, var(--brand));
+  letter-spacing: 0.12em;
+  opacity: 0;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.timeline-node.active .timeline-data-burst {
+  animation: dataBurst 0.8s 0.2s ease-out forwards;
+}
+
+@keyframes dataBurst {
+  0%   { opacity: 0; max-width: 0; }
+  40%  { opacity: 0.9; }
+  100% { opacity: 0.5; max-width: 100%; }
+}
+
 /* 事件列表 */
 .timeline-events {
   list-style: none;
@@ -146,8 +222,26 @@
   line-height: 1.7;
   padding: 8px 12px 8px 24px;
   position: relative;
-  background: var(--surface-soft);
+  background: rgba(29, 34, 36, 0.6);
   border-left: 1px solid var(--border-dim);
+  opacity: 0;
+  transform: translateX(-8px);
+}
+
+/* 事件条目延迟入场 */
+.timeline-node.active .timeline-events li {
+  animation: eventSlide 0.4s ease-out forwards;
+  border-left-color: rgba(200, 168, 90, 0.2);
+}
+
+.timeline-node.active .timeline-events li:nth-child(1) { animation-delay: 0.15s; }
+.timeline-node.active .timeline-events li:nth-child(2) { animation-delay: 0.25s; }
+.timeline-node.active .timeline-events li:nth-child(3) { animation-delay: 0.35s; }
+.timeline-node.active .timeline-events li:nth-child(4) { animation-delay: 0.45s; }
+.timeline-node.active .timeline-events li:nth-child(5) { animation-delay: 0.55s; }
+
+@keyframes eventSlide {
+  to { opacity: 1; transform: translateX(0); }
 }
 
 .timeline-events li::before {
@@ -158,8 +252,4 @@
   font-size: 10px;
   top: 10px;
   opacity: 0.7;
-}
-
-.timeline-node.active .timeline-events li {
-  border-left-color: rgba(200, 168, 90, 0.2);
 }

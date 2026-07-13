@@ -1,22 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { babel } from "../data/site.js";
 
 export default function CharacterArchive() {
   const [expanded, setExpanded] = useState(null);
+  const gridRef = useRef(null);
 
   const toggle = (id) => setExpanded((prev) => (prev === id ? null : id));
 
+  useEffect(() => {
+    const cards = gridRef.current?.querySelectorAll(".char-card");
+    if (!cards) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("card-visible");
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    cards.forEach((card, i) => {
+      card.style.transitionDelay = `${i * 90}ms`;
+      observer.observe(card);
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <section id="characters" className="character-section">
+      {/* 背景图层（特蕾西娅走向白光） */}
+      <div className="character-section-bg" />
+
       <div className="character-section-header">
         <span className="section-num-bg" aria-hidden="true">03</span>
         <p className="section-num-label">SECTION 03</p>
         <h2>人物档案</h2>
         <p className="section-sub">BABEL ARCHIVE // 人员档案 — 点击卡片查阅完整记录</p>
       </div>
-      <div className="character-grid">
+
+      <div ref={gridRef} className="character-grid">
         {babel.characters.map((char) => (
           <div
             key={char.id}

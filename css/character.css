@@ -1,50 +1,103 @@
+/* ══ 人物档案区 ══ */
 .character-section {
+  position: relative;
   padding: 96px 0;
+  overflow: hidden;
+}
+
+/* 背景图层：特蕾西娅走向白光 */
+.character-section-bg {
+  position: absolute;
+  inset: -60px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(14, 18, 19, 0.88) 0%,
+      rgba(14, 18, 19, 0.75) 40%,
+      rgba(14, 18, 19, 0.82) 100%
+    ),
+    url('/images/teresa-walk.png') center 30% / cover no-repeat;
+  animation: charBgBreathe 28s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes charBgBreathe {
+  from { transform: scale(1.04) translateY(0);    opacity: 0.9; }
+  to   { transform: scale(1.00) translateY(-12px); opacity: 1;   }
 }
 
 .character-section-header {
+  position: relative;
+  z-index: 1;
   margin-bottom: 40px;
-}
-
-.character-section-header h2 {
-  font-family: var(--font);
-  font-size: clamp(28px, 4vw, 40px);
-  font-weight: 600;
-  color: var(--text-main);
-  letter-spacing: -0.02em;
-  margin-bottom: 8px;
-}
-
-.character-section-header p {
-  color: var(--text-muted);
-  font-family: var(--font-mono);
-  font-size: 11px;
-  letter-spacing: 0.1em;
 }
 
 /* 档案卡网格：3列 */
 .character-grid {
+  position: relative;
+  z-index: 1;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
 }
 
-/* 单张档案卡 */
+/* ── 单张档案卡 ── */
 .char-card {
   position: relative;
-  background: var(--surface);
+  background: rgba(23, 27, 28, 0.88);
+  backdrop-filter: blur(6px);
   border: 1px solid var(--border-dim);
   overflow: hidden;
   cursor: pointer;
-  transition: border-color 0.25s, transform 0.25s;
+  transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.char-card.card-visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.5s, transform 0.5s, border-color 0.3s, box-shadow 0.3s;
 }
 
 .char-card:hover {
   border-color: var(--card-accent, var(--border));
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.5), 0 0 20px rgba(200,168,90,0.07);
 }
 
-/* 纹理水印（大字姓名，极低透明度） */
+/* 光泽扫过效果 */
+.char-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -80%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.03) 40%,
+    rgba(255, 255, 255, 0.07) 50%,
+    rgba(255, 255, 255, 0.03) 60%,
+    transparent 100%
+  );
+  transition: left 0.55s ease;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.char-card:hover::before {
+  left: 140%;
+}
+
+/* 激活后左侧彩色边框 */
+.char-card.expanded {
+  border-left: 2px solid var(--card-accent, var(--brand));
+}
+
+/* 纹理水印（大字姓名） */
 .char-card-watermark {
   position: absolute;
   bottom: -16px;
@@ -53,26 +106,24 @@
   font-size: 96px;
   font-weight: 600;
   color: var(--card-accent, var(--brand));
-  opacity: 0.05;
+  opacity: 0.06;
   line-height: 1;
   pointer-events: none;
   user-select: none;
   letter-spacing: -0.06em;
 }
 
-/* 卡片纹理背景 */
+/* 卡片斜纹背景 */
 .char-card-bg {
   position: absolute;
   inset: 0;
-  opacity: 0.03;
-  background:
-    repeating-linear-gradient(
-      55deg,
-      transparent,
-      transparent 20px,
-      var(--card-accent, #fff) 20px,
-      var(--card-accent, #fff) 21px
-    );
+  opacity: 0.04;
+  background: repeating-linear-gradient(
+    55deg,
+    transparent, transparent 20px,
+    var(--card-accent, #fff) 20px,
+    var(--card-accent, #fff) 21px
+  );
   pointer-events: none;
 }
 
@@ -118,11 +169,11 @@
   border: 1px solid;
 }
 
-.char-status.open     { color: #5A8C5A; border-color: rgba(90,140,90,0.4); background: rgba(90,140,90,0.08); }
-.char-status.sealed   { color: var(--brand); border-color: var(--border); background: var(--brand-dim); }
-.char-status.classified { color: var(--accent-red); border-color: rgba(140,54,54,0.4); background: rgba(140,54,54,0.08); }
+.char-status.open       { color: #5A8C5A; border-color: rgba(90,140,90,0.4);   background: rgba(90,140,90,0.08); }
+.char-status.sealed     { color: var(--brand); border-color: var(--border);     background: var(--brand-dim); }
+.char-status.classified { color: var(--accent-red); border-color: rgba(140,54,54,0.4);   background: rgba(140,54,54,0.08); }
 .char-status.restricted { color: var(--accent-blue); border-color: rgba(84,150,168,0.4); background: rgba(84,150,168,0.08); }
-.char-status.active   { color: var(--accent-blue); border-color: rgba(84,150,168,0.4); background: rgba(84,150,168,0.08); }
+.char-status.active     { color: var(--accent-blue); border-color: rgba(84,150,168,0.4); background: rgba(84,150,168,0.08); }
 
 .char-expand-hint {
   font-family: var(--font-mono);
@@ -130,7 +181,10 @@
   color: var(--text-muted);
   margin-top: 14px;
   letter-spacing: 0.08em;
+  transition: color 0.2s;
 }
+
+.char-card:hover .char-expand-hint { color: var(--brand); }
 
 /* 展开内容 */
 .char-card-detail {
@@ -138,13 +192,13 @@
   z-index: 1;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.4s ease, padding 0.3s;
+  transition: max-height 0.45s cubic-bezier(0.4,0,0.2,1), padding 0.3s;
   padding: 0 24px;
   border-top: 0 solid var(--border-dim);
 }
 
 .char-card.expanded .char-card-detail {
-  max-height: 360px;
+  max-height: 400px;
   padding: 0 24px 24px;
   border-top-width: 1px;
 }
@@ -152,7 +206,7 @@
 .char-summary {
   color: var(--text-soft);
   font-size: 14px;
-  line-height: 1.7;
+  line-height: 1.75;
   margin-bottom: 14px;
   padding-top: 16px;
 }
@@ -166,6 +220,7 @@
   padding: 10px 14px;
   border-left: 2px solid var(--card-accent, var(--border));
   margin-bottom: 16px;
+  background: rgba(200,168,90,0.03);
 }
 
 .char-tags {

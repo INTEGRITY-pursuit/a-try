@@ -27,7 +27,7 @@
     ),
     /* 暖金光晕叠加 */
     radial-gradient(ellipse at 50% 50%, rgba(200, 168, 90, 0.06) 0%, transparent 60%),
-    /* 主视觉图片 */
+    /* 主视觉图片：特蕾西娅花丛 */
     url('/images/quote-bg.png') center 40% / cover no-repeat,
     var(--page-bg);
   pointer-events: none;
@@ -39,8 +39,8 @@
   max-width: 760px;
   margin: 0 auto;
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.7s, transform 0.7s;
+  transform: translateY(20px);
+  transition: opacity 0.8s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .quote-inner.visible {

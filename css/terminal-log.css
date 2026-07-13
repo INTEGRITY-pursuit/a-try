@@ -1,23 +1,51 @@
+/* ══ 世界背景区 ══ */
 .lore-section {
-  padding: 96px 0;
-  border-top: 1px solid var(--border-dim);
   position: relative;
+  padding: 96px 0;
+  overflow: hidden;
+}
+
+/* 背景图层：麦田+特蕾西娅+博士 */
+.lore-section-bg {
+  position: absolute;
+  inset: -60px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(14, 18, 19, 0.92) 0%,
+      rgba(14, 18, 19, 0.78) 30%,
+      rgba(14, 18, 19, 0.68) 60%,
+      rgba(14, 18, 19, 0.88) 100%
+    ),
+    url('/images/lore-bg.png') center 55% / cover no-repeat;
+  animation: loreDrift 30s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@keyframes loreDrift {
+  from { background-position: center 50%; transform: scale(1.02) translateY(0); }
+  to   { background-position: center 62%; transform: scale(1.0)  translateY(-10px); }
 }
 
 .lore-section-header {
+  position: relative;
+  z-index: 1;
   margin-bottom: 48px;
 }
 
-/* 日志列表 */
+/* ── 日志列表 ── */
 .lore-log-list {
+  position: relative;
+  z-index: 1;
   display: grid;
   gap: 0;
   border: 1px solid var(--border);
-  position: relative;
-  background: var(--surface);
+  background: rgba(23, 27, 28, 0.82);
+  backdrop-filter: blur(4px);
 }
 
-/* 列表右上角切角 */
+/* 右上角切角 */
 .lore-log-list::after {
   content: "";
   position: absolute;
@@ -36,37 +64,34 @@
   gap: 0;
   border-bottom: 1px solid var(--border-dim);
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.5s, transform 0.5s;
+  transform: translateX(-16px);
+  transition: opacity 0.6s, transform 0.6s;
 }
 
-.lore-log-item:last-child {
-  border-bottom: none;
-}
+.lore-log-item:last-child { border-bottom: none; }
 
 .lore-log-item.visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translateX(0);
 }
 
 .lore-log-item:hover .lore-log-meta {
-  background: rgba(200, 168, 90, 0.06);
+  background: rgba(200, 168, 90, 0.07);
 }
 
 /* 左侧标签列 */
 .lore-log-meta {
   padding: 24px 20px;
-  background: var(--surface-soft);
+  background: rgba(29, 34, 36, 0.9);
   border-right: 1px solid var(--border-dim);
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 6px;
-  transition: background 0.2s;
+  transition: background 0.25s;
   position: relative;
 }
 
-/* 激活态左侧金色竖条 */
 .lore-log-item.visible .lore-log-meta::before {
   content: "";
   position: absolute;
@@ -74,12 +99,10 @@
   width: 2px;
   background: var(--brand);
   opacity: 0;
-  animation: fadeBar 0.4s 0.3s forwards;
+  animation: fadeBar 0.4s 0.4s forwards;
 }
 
-@keyframes fadeBar {
-  to { opacity: 0.6; }
-}
+@keyframes fadeBar { to { opacity: 0.7; } }
 
 .lore-log-id {
   font-family: var(--font-mono);
@@ -109,7 +132,6 @@
   position: relative;
 }
 
-/* 右侧文字前竖线 */
 .lore-log-text::before {
   content: '"';
   position: absolute;
@@ -121,4 +143,18 @@
   color: var(--brand);
   opacity: 0.12;
   line-height: 1;
+}
+
+/* 扫描线（区块级，更宽的重复） */
+.lore-section::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px, transparent 3px,
+    rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px
+  );
+  pointer-events: none;
+  z-index: 0;
 }

@@ -38,8 +38,8 @@ export default function ResultCard() {
           <p>what the hell。</p>
         </div>
         <div className="result-item">
-          <span>拼音</span>
-          <p>jīn tiān de fēng hěn qīng …</p>
+          <span>翻译</span>
+          <p>what can I say</p>
         </div>
         <div className="result-grid">
           <div className="result-badge">

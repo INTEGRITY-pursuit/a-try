@@ -35,7 +35,7 @@ export default function ResultCard() {
       <div className="result-stack">
         <div className="result-item">
           <span>原文</span>
-          <p>今天的风很轻，适合把脑海里的想法慢慢写下来。</p>
+          <p>what the hell。</p>
         </div>
         <div className="result-item">
           <span>拼音</span>
@@ -43,11 +43,11 @@ export default function ResultCard() {
         </div>
         <div className="result-grid">
           <div className="result-badge">
-            <span>情感分数</span>
+            <span>情绪分数</span>
             <strong data-score ref={scoreRef}>0.86</strong>
           </div>
           <div className="result-badge">
-            <span>情感判断</span>
+            <span>精神判断</span>
             <strong>偏积极</strong>
           </div>
         </div>

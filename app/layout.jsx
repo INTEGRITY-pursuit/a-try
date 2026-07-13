@@ -16,8 +16,8 @@ import "../css/lab.css";
 import "../css/responsive.css";
 
 export const metadata = {
-  title: "zero to tech",
-  description: "个人主页 + 文字实验室",
+  title: "INTEGRITY-pursuit",
+  description: "主页 + 地牢",
 };
 
 export default function RootLayout({ children }) {

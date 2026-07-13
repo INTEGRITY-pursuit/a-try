@@ -12,8 +12,8 @@ import { usePathname } from "next/navigation";
 export default function Nav() {
   const pathname = usePathname();
   const items = [
-    { href: "/",         label: "个人主页" },
-    { href: "/text-lab", label: "文字实验室" },
+    { href: "/",         label: "主页" },
+    { href: "/text-lab", label: "地牢" },
   ];
 
   return (

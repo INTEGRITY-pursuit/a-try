@@ -1,0 +1,124 @@
+.lore-section {
+  padding: 96px 0;
+  border-top: 1px solid var(--border-dim);
+  position: relative;
+}
+
+.lore-section-header {
+  margin-bottom: 48px;
+}
+
+/* 日志列表 */
+.lore-log-list {
+  display: grid;
+  gap: 0;
+  border: 1px solid var(--border);
+  position: relative;
+  background: var(--surface);
+}
+
+/* 列表右上角切角 */
+.lore-log-list::after {
+  content: "";
+  position: absolute;
+  top: 0; right: 0;
+  width: 0; height: 0;
+  border-style: solid;
+  border-width: 0 20px 20px 0;
+  border-color: transparent var(--page-bg) transparent transparent;
+  z-index: 2;
+}
+
+/* 单条日志 */
+.lore-log-item {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 0;
+  border-bottom: 1px solid var(--border-dim);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.5s, transform 0.5s;
+}
+
+.lore-log-item:last-child {
+  border-bottom: none;
+}
+
+.lore-log-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.lore-log-item:hover .lore-log-meta {
+  background: rgba(200, 168, 90, 0.06);
+}
+
+/* 左侧标签列 */
+.lore-log-meta {
+  padding: 24px 20px;
+  background: var(--surface-soft);
+  border-right: 1px solid var(--border-dim);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.2s;
+  position: relative;
+}
+
+/* 激活态左侧金色竖条 */
+.lore-log-item.visible .lore-log-meta::before {
+  content: "";
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 2px;
+  background: var(--brand);
+  opacity: 0;
+  animation: fadeBar 0.4s 0.3s forwards;
+}
+
+@keyframes fadeBar {
+  to { opacity: 0.6; }
+}
+
+.lore-log-id {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+}
+
+.lore-log-label {
+  font-family: var(--font-ui);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--brand);
+  letter-spacing: 0.04em;
+}
+
+/* 右侧文字列 */
+.lore-log-text {
+  padding: 24px 32px;
+  color: var(--text-soft);
+  font-family: var(--font-ui);
+  font-size: 15px;
+  line-height: 1.9;
+  letter-spacing: 0.03em;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+/* 右侧文字前竖线 */
+.lore-log-text::before {
+  content: '"';
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--font);
+  font-size: 32px;
+  color: var(--brand);
+  opacity: 0.12;
+  line-height: 1;
+}

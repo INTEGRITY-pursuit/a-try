@@ -1,10 +1,18 @@
-// 页面顶部的大标题 + 副标题。和 4.4 一字未改。
-// 它纯展示、不带任何交互，所以是个"服务端组件"——顶上不用写 "use client"。
-export default function PageHeading({ title, subtitle }) {
+export default function PageHeading({ archiveId, title, subtitle, meta }) {
   return (
-    <div className="hero-copy">
+    <div className="hero-body">
+      {archiveId && <p className="archive-id">{archiveId}</p>}
       <h1 className="hero-display">{title}</h1>
-      <p className="hero-subtitle">{subtitle}</p>
+      {subtitle && <p className="hero-tagline">{subtitle}</p>}
+      {meta && meta.length > 0 && (
+        <div className="hero-meta">
+          {meta.map((item, i) => (
+            <span key={i} className={"hero-meta-item" + (item.highlight ? " status-ok" : "")}>
+              {item.text}
+            </span>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

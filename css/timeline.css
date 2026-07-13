@@ -1,0 +1,165 @@
+.timeline-section {
+  padding: 96px 0;
+  position: relative;
+}
+
+.timeline-section-header {
+  margin-bottom: 64px;
+}
+
+/* 时间线容器 */
+.timeline-track {
+  position: relative;
+  display: grid;
+  gap: 0;
+}
+
+/* 竖轴线：使用渐变让它更有档案感 */
+.timeline-track::before {
+  content: "";
+  position: absolute;
+  left: 140px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    transparent,
+    var(--border) 8%,
+    var(--border) 92%,
+    transparent
+  );
+}
+
+/* 单个时间节点 */
+.timeline-node {
+  position: relative;
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 0;
+  padding: 0 0 0 0;
+  opacity: 0.3;
+  transition: opacity 0.5s;
+}
+
+.timeline-node.active {
+  opacity: 1;
+}
+
+/* 节点内容区块（带背景面板） */
+.timeline-node.active .timeline-content-col {
+  background: var(--surface);
+  border: 1px solid var(--border-dim);
+  border-left: 2px solid var(--node-color, var(--brand));
+}
+
+/* 左侧年份列 */
+.timeline-year-col {
+  padding: 28px 24px 28px 0;
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+
+.timeline-year {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  display: block;
+  line-height: 1;
+  margin-top: 4px;
+}
+
+/* 节点菱形（比圆点更有 AK 感） */
+.timeline-dot {
+  position: absolute;
+  left: 133px;
+  top: 28px;
+  width: 14px;
+  height: 14px;
+  background: var(--surface);
+  border: 1px solid var(--border-dim);
+  transform: rotate(45deg);
+  transition: border-color 0.3s, background 0.3s, box-shadow 0.3s;
+  z-index: 1;
+}
+
+.timeline-node.active .timeline-dot {
+  border-color: var(--node-color, var(--brand));
+  background: var(--node-color, var(--brand));
+  box-shadow: 0 0 16px var(--node-color, rgba(200,168,90,0.4));
+}
+
+/* 右侧内容列 */
+.timeline-content-col {
+  padding: 24px 28px 32px;
+  margin-bottom: 16px;
+  transition: background 0.4s, border-color 0.4s;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 0 100%);
+}
+
+/* 纪元标题 */
+.timeline-era {
+  font-family: var(--font-ui);
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 700;
+  color: var(--text-soft);
+  letter-spacing: 0.02em;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  line-height: 1.1;
+}
+
+.timeline-era::before {
+  content: "//";
+  font-family: var(--font-mono);
+  font-size: 14px;
+  opacity: 0.4;
+  flex-shrink: 0;
+}
+
+.timeline-node.active .timeline-era {
+  color: var(--node-color, var(--brand));
+}
+
+.timeline-node.active .timeline-era::before {
+  opacity: 1;
+  color: var(--node-color, var(--brand));
+}
+
+/* 事件列表 */
+.timeline-events {
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.timeline-events li {
+  color: var(--text-soft);
+  font-family: var(--font-ui);
+  font-size: 14px;
+  line-height: 1.7;
+  padding: 8px 12px 8px 24px;
+  position: relative;
+  background: var(--surface-soft);
+  border-left: 1px solid var(--border-dim);
+}
+
+.timeline-events li::before {
+  content: "▸";
+  position: absolute;
+  left: 8px;
+  color: var(--node-color, var(--brand));
+  font-size: 10px;
+  top: 10px;
+  opacity: 0.7;
+}
+
+.timeline-node.active .timeline-events li {
+  border-left-color: rgba(200, 168, 90, 0.2);
+}

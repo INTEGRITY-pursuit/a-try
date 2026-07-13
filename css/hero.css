@@ -1,46 +1,355 @@
 .hero-stage {
-  padding: 8px 0 18px;
-  min-height: 36vh;
+  /* 突破 page-shell 的宽度限制，铺满视口 */
+  position: relative;
+  width: 100vw;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  /* 内容与 page-shell 对齐 */
+  padding-left: max(24px, calc((100vw - var(--maxw)) / 2));
+  padding-right: max(24px, calc((100vw - var(--maxw)) / 2));
+  min-height: 100vh;
   display: grid;
-  align-content: center;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
 }
 
-.hero-topline {
+/* 背景图层：图片 + 深色叠加 + 细纹理 */
+.hero-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(
+      105deg,
+      rgba(14, 18, 19, 0.92) 0%,
+      rgba(14, 18, 19, 0.75) 45%,
+      rgba(14, 18, 19, 0.45) 70%,
+      rgba(14, 18, 19, 0.65) 100%
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 28px,
+      rgba(200, 168, 90, 0.03) 28px,
+      rgba(200, 168, 90, 0.03) 29px
+    ),
+    url('/images/hero-bg.png') center 30% / cover no-repeat,
+    var(--page-bg);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 底部渐变遮罩 */
+.hero-stage::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 240px;
+  background: linear-gradient(to bottom, transparent, var(--page-bg));
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── 幽灵文字层（MERCY / LIGHTHOUSE 镂空大字压底） ── */
+.hero-ghost-layer {
+  position: absolute;
+  right: -24px;
+  bottom: 120px;
+  z-index: 1;
   display: flex;
-  align-items: baseline;
+  flex-direction: column;
+  align-items: flex-end;
+  pointer-events: none;
+  user-select: none;
+  line-height: 0.88;
+}
+
+.hero-ghost-line {
+  font-family: var(--font-mono);
+  font-size: clamp(72px, 12vw, 160px);
+  font-weight: 700;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(200, 168, 90, 0.11);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: block;
+}
+
+.hero-ghost-line:nth-child(2) {
+  -webkit-text-stroke-color: rgba(84, 150, 168, 0.08);
+  font-size: clamp(60px, 10vw, 130px);
+}
+
+/* ── 扫描线纹理 ── */
+.hero-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.07) 2px,
+    rgba(0, 0, 0, 0.07) 3px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── HUD 瞄准角框 ── */
+.hud-corner {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 0.4s;
+}
+
+.hud-corner--tl {
+  top: 20px;
+  left: 0;
+  border-top: 1px solid var(--brand);
+  border-left: 1px solid var(--brand);
+}
+
+.hud-corner--tr {
+  top: 20px;
+  right: 0;
+  border-top: 1px solid var(--brand);
+  border-right: 1px solid var(--brand);
+}
+
+.hud-corner--bl {
+  bottom: 52px;
+  left: 0;
+  border-bottom: 1px solid var(--brand);
+  border-left: 1px solid var(--brand);
+}
+
+.hud-corner--br {
+  bottom: 52px;
+  right: 0;
+  border-bottom: 1px solid var(--brand);
+  border-right: 1px solid var(--brand);
+}
+
+/* ── 装饰性脚手架文字 ── */
+.hero-scaffold {
+  position: absolute;
+  bottom: 52px;
+  left: 0;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  color: rgba(200, 168, 90, 0.22);
+  pointer-events: none;
+  user-select: none;
+  z-index: 3;
+  text-transform: uppercase;
+}
+
+/* ── 导航栏层级 ── */
+.hero-topline {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 22px;
+  padding: 24px 0 0;
 }
 
-.hero-copy {
-  max-width: 620px;
+.hero-body {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 0 40px;
+  max-width: 640px;
 }
 
-.brand-eyebrow {
-  color: rgba(29, 29, 31, 0.88);
-  font-size: 21px;
-  font-weight: 500;
-  line-height: 1.14;
-  letter-spacing: -0.03em;
+.hero-anchor-nav {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  gap: 0;
+  padding: 28px 0 48px;
+  border-top: 1px solid var(--border-dim);
 }
 
+.hero-anchor-item {
+  flex: 1;
+  padding: 14px 16px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-align: center;
+  cursor: pointer;
+  border-right: 1px solid var(--border-dim);
+  transition: color 0.2s, background 0.2s;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.hero-anchor-item:last-child {
+  border-right: none;
+}
+
+.hero-anchor-item:hover {
+  color: var(--brand);
+  background: var(--brand-dim);
+}
+
+.anchor-bullet {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+/* ── 档案编号 ── */
+.archive-id {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--brand);
+  letter-spacing: 0.14em;
+  margin-bottom: 14px;
+  opacity: 0.85;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.archive-id::before {
+  content: "";
+  display: inline-block;
+  width: 24px;
+  height: 1px;
+  background: var(--brand);
+  opacity: 0.6;
+}
+
+/* ── 大标题 ── */
 .hero-display {
-  font-size: clamp(56px, 10vw, 96px);
-  line-height: 1.04;
-  letter-spacing: -0.06em;
+  font-family: var(--font);
+  font-size: clamp(64px, 11vw, 112px);
+  line-height: 1.0;
+  letter-spacing: -0.04em;
   font-weight: 600;
   background: var(--grad);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+/* 标题左侧竖向强调条 */
+.hero-display::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  background: var(--brand);
+  opacity: 0.7;
+}
+
+.hero-tagline {
+  color: var(--text-soft);
+  font-size: clamp(15px, 1.8vw, 19px);
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+  max-width: 480px;
+  margin-bottom: 32px;
+}
+
+.hero-meta {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+  padding: 10px 0;
+  border-top: 1px solid var(--border-dim);
+  border-bottom: 1px solid var(--border-dim);
+}
+
+.hero-meta-item {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}
+
+.hero-meta-item.status-ok {
+  color: var(--brand);
+}
+
+/* ── CTA 按钮，加对角切角 ── */
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 22px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--brand);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  text-decoration: none;
+  width: fit-content;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+}
+
+.cta-button:hover {
+  background: var(--brand-dim);
+  border-color: var(--brand);
+}
+
+.brand-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--brand);
+  letter-spacing: 0.12em;
+  opacity: 0.9;
+}
+
+/* ── 子页面小 Hero（text-lab）── */
+.hero-stage.hero-sub {
+  /* 取消全宽设定，回归普通流式布局 */
+  width: auto;
+  left: auto;
+  transform: none;
+  padding-left: 0;
+  padding-right: 0;
+  min-height: auto;
+  padding-top: 48px;
+  padding-bottom: 36px;
+}
+
+.hero-stage.hero-sub::before,
+.hero-stage.hero-sub::after {
+  display: none;
 }
 
 .hero-subtitle {
-  max-width: 540px;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.1em;
   margin-top: 10px;
-  color: var(--text-soft);
-  font-size: clamp(18px, 2.2vw, 24px);
-  line-height: 1.28;
-  letter-spacing: -0.02em;
 }

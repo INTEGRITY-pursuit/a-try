@@ -1,41 +1,74 @@
-// 个人主页。结构、文案和 4.4 的 HomePage 一模一样（只是改了名 HomePage → HomeView）。
-// 内容照旧从 site.js 的 home 里读——"数据与界面分离"原样保留，site.js 一字未改。
-// 它本身纯展示、不带交互，是个"服务端组件"，顶上不用写 "use client"。
-// 唯一的变化：4.4 那个"打开作品"靠 onNavigate 回调跳页，这里换成 Next 的 <Link>。
-import Link from "next/link";
 import Nav from "./Nav.jsx";
 import PageHeading from "./PageHeading.jsx";
-import AnimatedCardGrid from "./AnimatedCardGrid.jsx";
-import { home } from "../data/site.js";
+import TerminalLog from "./TerminalLog.jsx";
+import TimelineArchive from "./TimelineArchive.jsx";
+import CharacterArchive from "./CharacterArchive.jsx";
+import QuoteSection from "./QuoteSection.jsx";
+import { babel } from "../data/site.js";
 
 export default function HomeView() {
   return (
-    <AnimatedCardGrid className="dashboard-grid">
-      <article className="hero-stage panel-full">
+    <>
+      {/* ── Hero 全屏区 ── */}
+      <article className="hero-stage">
+
+        {/* 幽灵文字层：MERCY / LIGHTHOUSE 镂空大字 */}
+        <div className="hero-ghost-layer" aria-hidden="true">
+          <span className="hero-ghost-line">MERCY</span>
+          <span className="hero-ghost-line">LIGHTHOUSE</span>
+        </div>
+
+        {/* 扫描线纹理 */}
+        <div className="hero-scanlines" aria-hidden="true" />
+
+        {/* HUD 瞄准角框 */}
+        <div className="hud-corner hud-corner--tl" aria-hidden="true" />
+        <div className="hud-corner hud-corner--tr" aria-hidden="true" />
+        <div className="hud-corner hud-corner--bl" aria-hidden="true" />
+        <div className="hud-corner hud-corner--br" aria-hidden="true" />
+
+        {/* 脚手架装饰文字 */}
+        <p className="hero-scaffold" aria-hidden="true">
+          RHODES ISLAND TACTICAL SYSTEM v4.5 // BABEL ARCHIVE RETRIEVAL // ACCESS AUTHORIZED // ENCRYPT: LV-7
+        </p>
+
+        {/* 导航 */}
         <Nav />
-        <PageHeading title={home.heroTitle} subtitle={home.heroSubtitle} />
+
+        {/* 主标题区 */}
+        <PageHeading
+          archiveId={babel.archiveId}
+          title={babel.heroTitle}
+          subtitle={babel.heroTagline}
+          meta={[
+            { text: babel.accessStatus, highlight: true },
+            { text: babel.completionRate },
+          ]}
+        />
+
+        {/* CTA + 时间线锚点 */}
+        <div>
+          <a href="#lore" className="cta-button">{babel.ctaLabel}</a>
+          <nav className="hero-anchor-nav">
+            {babel.timeline.map((chapter) => (
+              <a key={chapter.era} href="#timeline" className="hero-anchor-item">
+                <span className="anchor-bullet" />
+                {chapter.era}
+              </a>
+            ))}
+          </nav>
+        </div>
       </article>
 
-      <article className="panel panel-full featured-work-panel card">
-        <p className="section-kicker">{home.featuredWork.kicker}</p>
-        <p className="featured-title">{home.featuredWork.title}</p>
-        <p className="featured-copy">{home.featuredWork.copy}</p>
-        <Link className="featured-link" href="/text-lab">
-          <span className="featured-link-label">{home.featuredWork.linkLabel}</span>
-          <span className="arrow">›</span>
-        </Link>
-      </article>
+      <TerminalLog />
+      <TimelineArchive />
+      <CharacterArchive />
+      <QuoteSection />
 
-      <article className="panel panel-full identity-panel card">
-        <div className="identity-item">
-          <p className="section-kicker">座右铭</p>
-          <p className="identity-value identity-quote">{home.identity.motto}</p>
-        </div>
-        <div className="identity-item">
-          <p className="section-kicker">正在学习</p>
-          <p className="identity-value">{home.identity.learning}</p>
-        </div>
-      </article>
-    </AnimatedCardGrid>
+      <footer className="site-footer">
+        <p className="footer-id">RHD-TERMINAL-V4.5 // 巴别塔档案馆站点</p>
+        <p className="footer-credit">素材来源：明日方舟官方 / 塞壬唱片 © Hypergryph — 本站为非商业同人展示</p>
+      </footer>
+    </>
   );
 }

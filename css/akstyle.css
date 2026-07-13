@@ -1,0 +1,176 @@
+/* ═══════════════════════════════════════════════════
+   明日方舟 UI 风格装饰系统
+   ═══════════════════════════════════════════════════ */
+
+/* ── 章节大字编号水印 ── */
+.section-num-bg {
+  position: absolute;
+  top: -28px;
+  left: -8px;
+  font-family: var(--font-mono);
+  font-size: clamp(100px, 14vw, 160px);
+  font-weight: 700;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(200, 168, 90, 0.07);
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -0.04em;
+}
+
+/* ── 章节标签（SECTION 0X）── */
+.section-num-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--brand);
+  letter-spacing: 0.18em;
+  margin-bottom: 8px;
+  opacity: 0.75;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.section-num-label::before {
+  content: "";
+  display: inline-block;
+  width: 20px;
+  height: 1px;
+  background: var(--brand);
+  opacity: 0.6;
+}
+
+/* ── 章节副标题 ── */
+.section-sub {
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  margin-top: 6px;
+}
+
+/* ── 章节标题 h2 统一样式 ── */
+.lore-section-header,
+.timeline-section-header,
+.character-section-header {
+  position: relative;
+  overflow: visible;
+  padding-bottom: 24px;
+}
+
+.lore-section-header h2,
+.timeline-section-header h2,
+.character-section-header h2 {
+  font-family: var(--font-ui);
+  font-size: clamp(36px, 5vw, 52px);
+  font-weight: 700;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  margin-top: 12px;
+  margin-bottom: 0;
+  position: relative;
+  display: inline-block;
+}
+
+/* 标题左侧强调竖条 */
+.lore-section-header h2::before,
+.timeline-section-header h2::before,
+.character-section-header h2::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 6px;
+  bottom: 6px;
+  width: 3px;
+  background: var(--brand);
+  opacity: 0.8;
+}
+
+/* 标题下方金→消失横线 */
+.lore-section-header h2::after,
+.timeline-section-header h2::after,
+.character-section-header h2::after {
+  content: "";
+  position: absolute;
+  bottom: -12px;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, var(--brand) 0%, rgba(200,168,90,0.3) 40%, transparent 80%);
+}
+
+/* ── 章节斜线装饰 ── */
+.ak-diagonal-stripe {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 120px;
+  height: 100%;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent 0px,
+    transparent 5px,
+    rgba(200, 168, 90, 0.04) 5px,
+    rgba(200, 168, 90, 0.04) 6px
+  );
+  pointer-events: none;
+}
+
+/* ── 通用 HUD 面板（带四角装饰线）── */
+.hud-panel {
+  position: relative;
+  clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+}
+
+/* ── 人物档案卡 clip-path 加强 ── */
+.char-card {
+  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+}
+
+/* ── 时间线节点强化：竖轴左侧加斜纹区域 ── */
+.timeline-section {
+  position: relative;
+}
+
+.timeline-section::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 80px;
+  bottom: 0;
+  width: 3px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--brand) 0px,
+    var(--brand) 4px,
+    transparent 4px,
+    transparent 8px
+  );
+  opacity: 0.08;
+  pointer-events: none;
+}
+
+/* ── 日志区左侧装饰竖字（改为 after，避免与 terminal-log.css 的 after 冲突） ── */
+
+/* ── 语录区 QUOTE 竖排装饰 ── */
+.quote-section {
+  position: relative;
+}
+
+.quote-section::after {
+  content: "THERESA // BABEL // MERCY LIGHTHOUSE";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  transform-origin: right center;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  color: rgba(200, 168, 90, 0.10);
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}

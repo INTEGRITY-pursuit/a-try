@@ -1,0 +1,109 @@
+.quote-section {
+  /* 突破容器全宽，背景图铺满 */
+  width: 100vw;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  box-sizing: border-box;
+  padding: 100px max(24px, calc((100vw - var(--maxw)) / 2));
+  border-top: 1px solid var(--border-dim);
+  border-bottom: 1px solid var(--border-dim);
+  text-align: center;
+  overflow: hidden;
+}
+
+/* 背景：第二张图片（花丛倒下）+ 深色遮罩 */
+.quote-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    /* 中央放射渐变，四周压暗 */
+    radial-gradient(
+      ellipse at 50% 45%,
+      rgba(14, 18, 19, 0.55) 0%,
+      rgba(14, 18, 19, 0.78) 55%,
+      rgba(14, 18, 19, 0.92) 100%
+    ),
+    /* 暖金光晕叠加 */
+    radial-gradient(ellipse at 50% 50%, rgba(200, 168, 90, 0.06) 0%, transparent 60%),
+    /* 主视觉图片 */
+    url('/images/quote-bg.png') center 40% / cover no-repeat,
+    var(--page-bg);
+  pointer-events: none;
+}
+
+.quote-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s, transform 0.7s;
+}
+
+.quote-inner.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.quote-mark {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--brand);
+  letter-spacing: 0.14em;
+  margin-bottom: 28px;
+  opacity: 0.7;
+}
+
+.quote-text {
+  font-family: var(--font);
+  font-size: clamp(20px, 3vw, 30px);
+  line-height: 1.8;
+  color: var(--text-main);
+  letter-spacing: 0.02em;
+  font-weight: 400;
+  text-shadow:
+    0 0 60px rgba(200, 168, 90, 0.15),
+    0 2px 12px rgba(0, 0, 0, 0.6);
+  margin-bottom: 28px;
+}
+
+.quote-attribution {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--brand);
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.quote-footnote {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+}
+
+/* 页脚 */
+.site-footer {
+  padding: 48px 0 32px;
+  border-top: 1px solid var(--border-dim);
+  display: grid;
+  gap: 8px;
+}
+
+.footer-id {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--brand);
+  letter-spacing: 0.12em;
+  opacity: 0.7;
+}
+
+.footer-credit {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+}

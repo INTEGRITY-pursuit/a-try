@@ -1,99 +1,59 @@
 .panel {
-  padding: 24px 28px;
+  position: relative;
+  padding: 28px 32px;
   background: var(--surface);
-  border-radius: var(--radius-panel);
+  border: 1px solid var(--border);
   box-shadow: var(--shadow);
+  /* 右上角斜切 — 明日方舟标志性五边形 */
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 18px, 100% 100%, 18px 100%, 0 calc(100% - 18px));
 }
 
-/* 卡片的初始状态：藏起来 + 微微下沉，等动画把它们抬起来。
-   cards.js 在浏览器加载完后用 anime.js 给它们做 stagger 入场。 */
+/* HUD 角框：左上 + 右下 */
+.panel::before {
+  content: "";
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  width: 14px;
+  height: 14px;
+  border-top: 1px solid var(--brand);
+  border-left: 1px solid var(--brand);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.6;
+}
+
+.panel::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  right: -1px;
+  width: 14px;
+  height: 14px;
+  border-bottom: 1px solid var(--brand);
+  border-right: 1px solid var(--brand);
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0.6;
+}
+
 .card {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(20px);
 }
 
 .section-kicker {
-  margin-bottom: 12px;
-  color: var(--text-muted);
-  font-size: 12px;
-  font-weight: 600;
-  line-height: 1.33;
-  letter-spacing: -0.12px;
-}
-
-/* === 作品 panel === */
-.featured-work-panel {
-  display: grid;
-  gap: 8px;
-  padding-top: 28px;
-  padding-bottom: 28px;
-  min-height: 220px;
-  align-content: center;
-}
-
-.featured-title {
-  max-width: 720px;
-  font-size: clamp(34px, 4.2vw, 52px);
-  line-height: 1.04;
-  letter-spacing: -0.05em;
-  font-weight: 600;
-}
-
-.featured-copy {
-  max-width: 520px;
-  color: var(--text-soft);
-  font-size: clamp(17px, 2vw, 21px);
-  line-height: 1.28;
-  letter-spacing: -0.02em;
-}
-
-.featured-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  width: fit-content;
-  margin-top: 6px;
-  transition: opacity 0.2s;
-}
-
-.featured-link:hover { opacity: 0.86; }
-
-.featured-link-label {
+  margin-bottom: 10px;
   color: var(--brand);
-  font-size: 17px;
-  line-height: 1.47;
-  letter-spacing: -0.37px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
 }
 
-.arrow {
-  color: var(--brand);
-  font-size: 28px;
-  line-height: 1;
-}
-
-/* === 身份 panel === */
-.identity-panel {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px;
-  align-items: start;
-  padding-top: 20px;
-  padding-bottom: 20px;
-}
-
-.identity-item { padding-top: 4px; }
-
-.identity-value {
-  font-size: clamp(24px, 3vw, 32px);
-  line-height: 1.12;
-  letter-spacing: -0.04em;
-  font-weight: 600;
-}
-
-.identity-quote {
-  max-width: 520px;
-  font-size: clamp(20px, 2.2vw, 28px);
-  line-height: 1.4;
-  letter-spacing: -0.02em;
-  font-weight: 500;
+.section-divider {
+  width: 40px;
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
 }

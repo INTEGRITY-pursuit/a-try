@@ -1,26 +1,44 @@
 @media (max-width: 834px) {
-  .panel-half { grid-column: span 12; }
+  .panel-half  { grid-column: span 12; }
+  .panel-third { grid-column: span 12; }
   .result-grid { grid-template-columns: 1fr; }
-  .identity-panel { grid-template-columns: 1fr; }
-  .lab-panel { min-height: auto; }
+  .lab-panel   { min-height: auto; }
+
+  /* 时间线在窄屏折叠左侧年份列 */
+  .timeline-track::before { left: 0; }
+  .timeline-node { grid-template-columns: 1fr; padding-left: 20px; }
+  .timeline-year-col { display: none; }
+  .timeline-dot { left: -7px; }
+  .timeline-content-col { padding-left: 0; }
+
+  /* 人物档案卡：2列 */
+  .character-grid { grid-template-columns: repeat(2, 1fr); }
+
+  /* 日志左侧缩短 */
+  .lore-log-item { grid-template-columns: 120px 1fr; }
 }
 
 @media (max-width: 640px) {
   .page-shell { width: min(var(--maxw), calc(100% - 24px)); }
-  .hero-stage { padding: 12px 0 20px; min-height: auto; }
-  .hero-topline {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 18px;
-  }
-  .hero-display { font-size: 48px; }
-  .hero-subtitle { margin-top: 14px; font-size: 18px; }
-  .brand-eyebrow { font-size: 18px; }
-  .panel { padding: 20px; border-radius: 24px; }
-  .panel-heading h3,
-  .featured-title,
-  .identity-value,
-  .result-badge strong { font-size: 24px; }
-  .identity-quote { font-size: 20px; }
+
+  /* Hero */
+  .hero-stage { min-height: 100svh; }
+  .hero-body  { padding: 40px 0 32px; }
+  .hero-display { font-size: 52px; }
+  .hero-tagline { font-size: 14px; }
+  .hero-anchor-nav { flex-wrap: wrap; }
+  .hero-anchor-item { flex: none; width: 50%; border-bottom: 1px solid var(--border-dim); }
+
+  /* 人物档案卡：1列 */
+  .character-grid { grid-template-columns: 1fr; }
+
+  /* 日志：上下堆叠 */
+  .lore-log-item { grid-template-columns: 1fr; }
+  .lore-log-meta { border-right: none; border-bottom: 1px solid var(--border-dim); }
+
+  /* 语录 */
+  .quote-text { font-size: 18px; }
+
+  /* 面板内边距收紧 */
+  .panel { padding: 20px; }
 }
